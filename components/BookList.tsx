@@ -16,7 +16,7 @@ const BookList: React.FC = () => {
   const userRole = useSelector((state: RootState) => state.user.role); // Assuming you have user role in state
 
   // Determine which list to display
-  const displayedBooks = filteredBooks !== null ? filteredBooks : books;
+  const displayedBooks = filteredBooks?.length ? filteredBooks : books;
 
   const handleBorrow = (bookIsbn: string, role: 'Member' | 'Librarian') => {
     dispatch(borrowBook({ isbn: bookIsbn, role }));

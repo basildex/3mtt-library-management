@@ -53,25 +53,36 @@ const bookSlice = createSlice({
         );
       }
     },
-    borrowBook: (
-      state,
-      action: PayloadAction<{ isbn: string; role: 'Member' | 'Librarian' }>
-    ) => {
-      const { isbn, role } = action.payload;
-      const book = state.books.find((b) => b.isbn === isbn);
-      if (book && book.available) {
-        if (role === 'Member') {
-          book.available = false; // Members affect availability
-        } else if (role === 'Librarian') {
-          book.available = !book.available; // Librarians toggle availability
+    borrowBook: (state, action) => {
+      const { isbn } = action.payload;
+      const bookIndex = state.books.findIndex((book) => book.isbn === isbn);
+      if (bookIndex > -1) {
+        state.books[bookIndex].available = false;
+      }
+
+      if (state.filteredBooks) {
+        const filteredIndex = state.filteredBooks.findIndex(
+          (book) => book.isbn === isbn
+        );
+        if (filteredIndex > -1) {
+          state.filteredBooks[filteredIndex].available = false;
         }
       }
     },
-    returnBook: (state, action: PayloadAction<string>) => {
+    returnBook: (state, action) => {
       const isbn = action.payload;
-      const book = state.books.find((b) => b.isbn === isbn);
-      if (book && !book.available) {
-        book.available = true;
+      const bookIndex = state.books.findIndex((book) => book.isbn === isbn);
+      if (bookIndex > -1) {
+        state.books[bookIndex].available = true;
+      }
+
+      if (state.filteredBooks) {
+        const filteredIndex = state.filteredBooks.findIndex(
+          (book) => book.isbn === isbn
+        );
+        if (filteredIndex > -1) {
+          state.filteredBooks[filteredIndex].available = true;
+        }
       }
     },
     toggleBookStatus: (state, action: PayloadAction<string>) => {

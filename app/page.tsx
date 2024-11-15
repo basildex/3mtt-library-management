@@ -15,12 +15,9 @@ const HomePage: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const loginAsLibrarian = () => {
-    dispatch(setUserRole('librarian'));
-  };
-
-  const loginAsMember = () => {
-    dispatch(setUserRole('member'));
+  const toggleRole = () => {
+    const newRole = userRole === 'member' ? 'librarian' : 'member';
+    dispatch(setUserRole(newRole));
   };
 
   return (
@@ -28,27 +25,15 @@ const HomePage: React.FC = () => {
       <h1 className="text-3xl font-bold text-center mb-6">
         Library Management System
       </h1>
-      <div className="flex justify-around">
-        <div className="m-2">
-          <button
-            title="Librarian Button"
-            onClick={loginAsLibrarian}
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
-          >
-            Open Librarian Panel
-          </button>
-        </div>
-        <div className="m-2">
-          <button
-            title="Member Button"
-            onClick={loginAsMember}
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
-          >
-            Open Member Panel
-          </button>
-        </div>
+      <div className="mb-4">
+        <button
+          onClick={toggleRole}
+          className="px-4 py-2 bg-purple-500 text-white rounded-md"
+        >
+          Switch to {userRole === 'member' ? 'librarian' : 'member'}
+        </button>
+        <p className="mt-2">Current Role: {userRole}</p>
       </div>
-
       {userRole === 'member' && <Search />}
       {userRole === 'librarian' && <LibrarianPanel />}
       {userRole === 'member' && <BookList />}

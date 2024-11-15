@@ -1,28 +1,39 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setBooks } from '../store/slices/bookSlice';
+import debounce from 'lodash.debounce';
 
 const Search: React.FC = () => {
-  const [query, setQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useDispatch();
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value.toLowerCase();
-    setQuery(searchTerm);
+  // Debounced function to dispatch search
+  const debouncedDispatch = React.useMemo(
+    () => debounce((keyword: string) => dispatch(setBooks(keyword)), 300),
+    [dispatch]
+  );
 
-    dispatch(setBooks(query));
+  useEffect(() => {
+    debouncedDispatch(searchTerm);
+    // Cleanup function to cancel debounce on unmount or before next call
+    return () => {
+      debouncedDispatch.cancel();
+    };
+  }, [searchTerm, debouncedDispatch]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const keyword = e.target.value;
+    setSearchTerm(keyword);
   };
 
   return (
-    <div className="p-4 mb-4">
+    <div className="mb-6">
       <input
         type="text"
-        value={query}
+        value={searchTerm}
         onChange={handleSearch}
-        placeholder="Search by title or author"
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-700"
+        placeholder="Search books by title, author, or ISBN"
+        className="w-full p-2 border rounded"
       />
     </div>
   );
