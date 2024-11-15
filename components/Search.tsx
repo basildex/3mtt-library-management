@@ -3,25 +3,16 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setBooks } from '../store/slices/bookSlice';
-import { RootState } from '../store';
-import { useSelector } from 'react-redux';
 
 const Search: React.FC = () => {
   const [query, setQuery] = useState('');
-  const books = useSelector((state: RootState) => state.books.books);
   const dispatch = useDispatch();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     setQuery(searchTerm);
 
-    const filteredBooks = books.filter(
-      (book) =>
-        book.title.toLowerCase().includes(searchTerm) ||
-        book.author.toLowerCase().includes(searchTerm)
-    );
-
-    dispatch(setBooks(filteredBooks));
+    dispatch(setBooks(query));
   };
 
   return (
@@ -31,7 +22,7 @@ const Search: React.FC = () => {
         value={query}
         onChange={handleSearch}
         placeholder="Search by title or author"
-        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-700"
       />
     </div>
   );

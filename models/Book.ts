@@ -3,15 +3,16 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IBook extends Document {
   title: string;
   author: string;
-  ISBN: string;
-  isAvailable: boolean;
+  isbn: string;
+  available?: boolean;
 }
 
 const BookSchema = new Schema({
   title: String,
   author: String,
-  ISBN: String,
-  isAvailable: { type: Boolean, default: true },
+  isbn: String,
+  available: { type: Boolean, default: true },
 });
 
-export default mongoose.models.Book || mongoose.model<IBook>('Book', BookSchema);
+export default mongoose.models.Book ||
+  mongoose.model<IBook>('Book', BookSchema);
