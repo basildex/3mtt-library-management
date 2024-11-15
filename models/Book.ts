@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IBook extends Document {
+  id: string;
   title: string;
   author: string;
   isbn: string;
@@ -8,6 +9,7 @@ interface IBook extends Document {
 }
 
 const BookSchema = new Schema({
+  id: String,
   title: String,
   author: String,
   isbn: String,
